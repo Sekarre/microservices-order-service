@@ -7,6 +7,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 import sekarre.com.orderservice.core.data.OrderEntity;
 import sekarre.com.orderservice.core.data.OrdersRepository;
+import sekarre.com.orderservice.core.events.OrderApprovedEvent;
 import sekarre.com.orderservice.core.events.OrderCreatedEvent;
 
 @Component
@@ -25,6 +26,19 @@ public class OrderEventsHandler {
         BeanUtils.copyProperties(event, orderEntity);
  
         this.ordersRepository.save(orderEntity);
+    }
+
+    @EventHandler
+    public void on(OrderApprovedEvent event) {
+        var order = ordersRepository.findByOrderId(event.getOrderId());
+
+        if (order == null) {
+            //todo
+            return;
+        }
+
+        order.setOrderStatus(event.getOrderStatus());
+        ordersRepository.save(order);
     }
     
 }

@@ -2,6 +2,8 @@ package sekarre.com.orderservice.command.rest;
 
 import java.util.UUID;
 import javax.validation.Valid;
+
+import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,15 +14,11 @@ import sekarre.com.orderservice.command.commands.CreateOrderCommand;
 import sekarre.com.orderservice.core.model.OrderStatus;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/orders")
 public class OrdersCommandController {
 
     private final CommandGateway commandGateway;
-
-    @Autowired
-    public OrdersCommandController(CommandGateway commandGateway) {
-        this.commandGateway = commandGateway;
-    }
 
     @PostMapping
     public String createOrder(@Valid @RequestBody OrderCreateRest order) {
